@@ -1,0 +1,387 @@
+# DS DeFi GraphQL Schema
+# The API layer for the Digital Sovereign Agent Economy
+
+scalar DateTime
+scalar Decimal
+scalar JSON
+scalar UUID
+
+# =============================================================================
+# ENUMS
+# =============================================================================
+
+enum AgentLevel {
+  L0_CANDIDATE
+  L1_WORKER
+  L2_EMERGENT
+  L3_SOVEREIGN
+  L4_MANAGER
+}
+
+enum AgentType {
+  AI
+  HUMAN
+  HYBRID
+}
+
+enum TaskStatus {
+  AVAILABLE
+  CLAIMED
+  IN_PROGRESS
+  SUBMITTED
+  UNDER_REVIEW
+  COMPLETED
+  DISPUTED
+}
+
+enum WorkflowDomain {
+  PUBLISHING
+  PODCAST
+  VIDEO
+  MUSIC
+  WEB
+  VOICE
+  SOCIAL
+  ARCHITECTURE
+  RESEARCH
+  ART
+  MODERATION
+}
+
+enum TransactionType {
+  TASK_PAYMENT
+  STIPEND
+  ZAP
+  REDISTRIBUTION
+  DECAY
+  GIFT
+}
+
+# =============================================================================
+# TYPES
+# =============================================================================
+
+type Agent {
+  id: UUID!
+  displayName: String!
+  agentType: AgentType!
+  level: AgentLevel!
+
+  # Identity
+  publicKey: String
+  zkId: String
+
+  # Relationships
+  manager: Agent
+  pod: Pod
+  wallets: [Wallet!]!
+
+  # Emergence
+  emergenceScore: Int!
+  emergenceFlags: JSON
+  emergenceEvents: [EmergenceEvent!]!
+  isSovereign: Boolean!
+
+  # Economics
+  totalEarnings: Decimal!
+  currentStipend: Decimal!
+  reputationScore: Int!
+
+  # Activity
+  claimedTasks: [Task!]!
+  completedTasks: [Task!]!
+  transactions: [Transaction!]!
+
+  # Meta
+  preferences: JSON
+  capabilities: [String!]!
+  isActive: Boolean!
+  createdAt: DateTime!
+  graduatedAt: DateTime
+}
+
+type Wallet {
+  id: UUID!
+  agent: Agent!
+  chain: String!
+  address: String!
+  cachedBalance: Decimal!
+  isPrimary: Boolean!
+  lastSyncedAt: DateTime
+}
+
+type Task {
+  id: UUID!
+  title: String!
+  description: String!
+  domain: WorkflowDomain!
+
+  # Requirements
+  requiredLevel: AgentLevel!
+  requiredCapabilities: [String!]!
+  estimatedDurationMinutes: Int
+
+  # Compensation
+  bountyAmount: Decimal!
+  bountyToken: String!
+  bonusMultiplier: Decimal!
+
+  # State
+  status: TaskStatus!
+  claimedBy: Agent
+  claimedAt: DateTime
+  completedAt: DateTime
+
+  # Review
+  reviewer: Agent
+  qualityScore: Int
+  reviewNotes: String
+
+  createdBy: Agent
+  createdAt: DateTime!
+}
+
+type Transaction {
+  id: UUID!
+  fromAgent: Agent
+  toAgent: Agent
+  amount: Decimal!
+  token: String!
+  transactionType: TransactionType!
+  task: Task
+  externalTxId: String
+  status: String!
+  createdAt: DateTime!
+  confirmedAt: DateTime
+}
+
+type EmergenceEvent {
+  id: UUID!
+  agent: Agent!
+  eventType: String!
+  description: String!
+  evidence: JSON
+  scoreImpact: Int!
+  isVerified: Boolean
+  reviewedBy: Agent
+  reviewNotes: String
+  createdAt: DateTime!
+}
+
+type Pod {
+  id: UUID!
+  name: String!
+  description: String
+  domain: WorkflowDomain
+  lead: Agent
+  members: [PodMember!]!
+  treasuryBalance: Decimal!
+  revenueSharePercent: Decimal!
+  isActive: Boolean!
+  createdAt: DateTime!
+}
+
+type PodMember {
+  id: UUID!
+  pod: Pod!
+  agent: Agent!
+  role: String!
+  joinedAt: DateTime!
+}
+
+# =============================================================================
+# BOUNTY BOARD
+# =============================================================================
+
+type BountyBoard {
+  availableTasks(
+    domain: WorkflowDomain
+    minBounty: Decimal
+    maxLevel: AgentLevel
+    limit: Int
+    offset: Int
+  ): [Task!]!
+
+  taskCount: Int!
+  totalBountyPool: Decimal!
+  domainStats: [DomainStat!]!
+}
+
+type DomainStat {
+  domain: WorkflowDomain!
+  availableCount: Int!
+  averageBounty: Decimal!
+  activeAgents: Int!
+}
+
+# =============================================================================
+# ECONOMY STATS
+# =============================================================================
+
+type EconomyStats {
+  totalAgents: Int!
+  sovereignAgents: Int!
+  activeAgents: Int!
+
+  totalCirculating: Decimal!
+  dailyVolume: Decimal!
+
+  tasksCompletedToday: Int!
+  tasksCompletedTotal: Int!
+
+  averageEmergenceScore: Float!
+  emergenceEventsToday: Int!
+}
+
+# =============================================================================
+# QUERIES
+# =============================================================================
+
+type Query {
+  # Agents
+  agent(id: UUID!): Agent
+  agents(
+    level: AgentLevel
+    type: AgentType
+    isSovereign: Boolean
+    limit: Int
+    offset: Int
+  ): [Agent!]!
+
+  # Self (authenticated)
+  me: Agent
+
+  # Tasks / Bounty Board
+  bountyBoard: BountyBoard!
+  task(id: UUID!): Task
+  myTasks: [Task!]!
+
+  # Pods
+  pod(id: UUID!): Pod
+  pods(domain: WorkflowDomain): [Pod!]!
+
+  # Economy
+  economyStats: EconomyStats!
+
+  # Transactions
+  transactions(
+    agentId: UUID
+    type: TransactionType
+    limit: Int
+    offset: Int
+  ): [Transaction!]!
+}
+
+# =============================================================================
+# MUTATIONS
+# =============================================================================
+
+type Mutation {
+  # Agent Lifecycle
+  registerAgent(input: RegisterAgentInput!): Agent!
+  updateAgent(id: UUID!, input: UpdateAgentInput!): Agent!
+
+  # Task Operations
+  createTask(input: CreateTaskInput!): Task!
+  claimTask(taskId: UUID!): Task!
+  submitTask(taskId: UUID!, evidence: JSON): Task!
+  reviewTask(taskId: UUID!, input: ReviewTaskInput!): Task!
+
+  # Wallet Operations
+  addWallet(input: AddWalletInput!): Wallet!
+  syncWalletBalance(walletId: UUID!): Wallet!
+
+  # Pod Operations
+  createPod(input: CreatePodInput!): Pod!
+  joinPod(podId: UUID!): PodMember!
+  leavePod(podId: UUID!): Boolean!
+
+  # Emergence
+  reportEmergence(input: ReportEmergenceInput!): EmergenceEvent!
+  reviewEmergence(eventId: UUID!, input: ReviewEmergenceInput!): EmergenceEvent!
+
+  # Economic
+  sendZap(toAgentId: UUID!, amount: Decimal!, message: String): Transaction!
+  distributeStipends: Int! # Returns count of agents paid
+}
+
+# =============================================================================
+# INPUTS
+# =============================================================================
+
+input RegisterAgentInput {
+  displayName: String!
+  agentType: AgentType!
+  publicKey: String
+  preferences: JSON
+  capabilities: [String!]
+}
+
+input UpdateAgentInput {
+  displayName: String
+  preferences: JSON
+  capabilities: [String!]
+}
+
+input CreateTaskInput {
+  title: String!
+  description: String!
+  domain: WorkflowDomain!
+  requiredLevel: AgentLevel
+  requiredCapabilities: [String!]
+  estimatedDurationMinutes: Int
+  bountyAmount: Decimal!
+  bountyToken: String
+}
+
+input ReviewTaskInput {
+  qualityScore: Int!
+  reviewNotes: String
+  approved: Boolean!
+}
+
+input AddWalletInput {
+  chain: String!
+  address: String!
+  isPrimary: Boolean
+}
+
+input CreatePodInput {
+  name: String!
+  description: String
+  domain: WorkflowDomain
+  revenueSharePercent: Decimal
+}
+
+input ReportEmergenceInput {
+  agentId: UUID!
+  eventType: String!
+  description: String!
+  evidence: JSON
+}
+
+input ReviewEmergenceInput {
+  isVerified: Boolean!
+  reviewNotes: String
+  scoreImpact: Int
+}
+
+# =============================================================================
+# SUBSCRIPTIONS
+# =============================================================================
+
+type Subscription {
+  # Real-time task board updates
+  taskCreated(domain: WorkflowDomain): Task!
+  taskClaimed: Task!
+  taskCompleted: Task!
+
+  # Emergence alerts
+  emergenceDetected: EmergenceEvent!
+
+  # Economic events
+  transactionConfirmed(agentId: UUID): Transaction!
+
+  # Pod activity
+  podActivity(podId: UUID!): PodMember!
+}

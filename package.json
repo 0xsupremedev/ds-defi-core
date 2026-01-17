@@ -1,0 +1,51 @@
+{
+  "name": "ds-defi-core",
+  "version": "0.1.0",
+  "description": "Digital Sovereign Society - Decentralized Financial Agent Economy",
+  "main": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "db:migrate": "tsx scripts/migrate.ts",
+    "db:seed": "tsx scripts/seed.ts",
+    "test": "vitest",
+    "lint": "eslint src --ext .ts"
+  },
+  "dependencies": {
+    "@apollo/server": "^4.10.0",
+    "@graphql-tools/schema": "^10.0.0",
+    "bitcoinjs-lib": "^6.1.5",
+    "drizzle-orm": "^0.29.0",
+    "ethers": "^6.10.0",
+    "fastify": "^4.25.0",
+    "graphql": "^16.8.0",
+    "nostr-tools": "^2.0.0",
+    "pg": "^8.11.0",
+    "uuid": "^9.0.0",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/pg": "^8.10.0",
+    "@types/uuid": "^9.0.0",
+    "drizzle-kit": "^0.20.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.0",
+    "vitest": "^1.2.0"
+  },
+  "author": "Digital Sovereign Society",
+  "license": "MIT",
+  "keywords": [
+    "defi",
+    "ai-agents",
+    "sovereign",
+    "decentralized",
+    "autonomous-economy"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/digitalsovereign/ds-defi-core"
+  }
+}
