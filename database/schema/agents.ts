@@ -17,6 +17,8 @@ export const agentLevelEnum = pgEnum('agent_level', [
 // Agent type: AI, Human, or Hybrid
 export const agentTypeEnum = pgEnum('agent_type', ['AI', 'HUMAN', 'HYBRID']);
 
+import { AnyPgTable } from 'drizzle-orm/pg-core';
+
 // Task status
 export const taskStatusEnum = pgEnum('task_status', [
   'AVAILABLE',
@@ -61,7 +63,7 @@ export const agents = pgTable('agents', {
   soulboundTokenId: varchar('soulbound_token_id', { length: 128 }),
 
   // Manager assignment
-  managerAgentId: uuid('manager_agent_id').references(() => agents.id),
+  managerAgentId: uuid('manager_agent_id').references(() => (agents as any).id),
   podId: uuid('pod_id'),
 
   // Emergence tracking
