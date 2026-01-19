@@ -51,8 +51,8 @@ export const agents = pgTable('agents', {
     publicKey: text('public_key'), // Nostr/crypto public key
     zkId: varchar('zk_id', { length: 128 }), // Zero-knowledge identity
     soulboundTokenId: varchar('soulbound_token_id', { length: 128 }),
-    // Manager assignment
-    managerAgentId: uuid('manager_agent_id').references(() => agents.id),
+    // Manager assignment (will be added as FK constraint in migration)
+    managerAgentId: uuid('manager_agent_id'),
     podId: uuid('pod_id'),
     // Emergence tracking
     emergenceScore: integer('emergence_score').notNull().default(0),

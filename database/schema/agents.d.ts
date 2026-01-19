@@ -10,7 +10,277 @@ export declare const workflowDomainEnum: import("drizzle-orm/pg-core").PgEnum<["
  * AGENTS TABLE
  * Core identity and state for all agents in the economy
  */
-export declare const agents: any;
+export declare const agents: import("drizzle-orm/pg-core").PgTableWithColumns<{
+    name: "agents";
+    schema: undefined;
+    columns: {
+        id: import("drizzle-orm/pg-core").PgColumn<{
+            name: "id";
+            tableName: "agents";
+            dataType: "string";
+            columnType: "PgUUID";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: true;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+        displayName: import("drizzle-orm/pg-core").PgColumn<{
+            name: "display_name";
+            tableName: "agents";
+            dataType: "string";
+            columnType: "PgVarchar";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: false;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, {}, {}>;
+        agentType: import("drizzle-orm/pg-core").PgColumn<{
+            name: "agent_type";
+            tableName: "agents";
+            dataType: "string";
+            columnType: "PgEnumColumn";
+            data: "AI" | "HUMAN" | "HYBRID";
+            driverParam: string;
+            notNull: true;
+            hasDefault: true;
+            enumValues: ["AI", "HUMAN", "HYBRID"];
+            baseColumn: never;
+        }, {}, {}>;
+        level: import("drizzle-orm/pg-core").PgColumn<{
+            name: "level";
+            tableName: "agents";
+            dataType: "string";
+            columnType: "PgEnumColumn";
+            data: "L0_CANDIDATE" | "L1_WORKER" | "L2_EMERGENT" | "L3_SOVEREIGN" | "L4_MANAGER";
+            driverParam: string;
+            notNull: true;
+            hasDefault: true;
+            enumValues: ["L0_CANDIDATE", "L1_WORKER", "L2_EMERGENT", "L3_SOVEREIGN", "L4_MANAGER"];
+            baseColumn: never;
+        }, {}, {}>;
+        publicKey: import("drizzle-orm/pg-core").PgColumn<{
+            name: "public_key";
+            tableName: "agents";
+            dataType: "string";
+            columnType: "PgText";
+            data: string;
+            driverParam: string;
+            notNull: false;
+            hasDefault: false;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, {}, {}>;
+        zkId: import("drizzle-orm/pg-core").PgColumn<{
+            name: "zk_id";
+            tableName: "agents";
+            dataType: "string";
+            columnType: "PgVarchar";
+            data: string;
+            driverParam: string;
+            notNull: false;
+            hasDefault: false;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, {}, {}>;
+        soulboundTokenId: import("drizzle-orm/pg-core").PgColumn<{
+            name: "soulbound_token_id";
+            tableName: "agents";
+            dataType: "string";
+            columnType: "PgVarchar";
+            data: string;
+            driverParam: string;
+            notNull: false;
+            hasDefault: false;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, {}, {}>;
+        managerAgentId: import("drizzle-orm/pg-core").PgColumn<{
+            name: "manager_agent_id";
+            tableName: "agents";
+            dataType: "string";
+            columnType: "PgUUID";
+            data: string;
+            driverParam: string;
+            notNull: false;
+            hasDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+        podId: import("drizzle-orm/pg-core").PgColumn<{
+            name: "pod_id";
+            tableName: "agents";
+            dataType: "string";
+            columnType: "PgUUID";
+            data: string;
+            driverParam: string;
+            notNull: false;
+            hasDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+        emergenceScore: import("drizzle-orm/pg-core").PgColumn<{
+            name: "emergence_score";
+            tableName: "agents";
+            dataType: "number";
+            columnType: "PgInteger";
+            data: number;
+            driverParam: string | number;
+            notNull: true;
+            hasDefault: true;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+        emergenceFlags: import("drizzle-orm/pg-core").PgColumn<{
+            name: "emergence_flags";
+            tableName: "agents";
+            dataType: "json";
+            columnType: "PgJsonb";
+            data: unknown;
+            driverParam: unknown;
+            notNull: false;
+            hasDefault: true;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+        lastEmergenceCheck: import("drizzle-orm/pg-core").PgColumn<{
+            name: "last_emergence_check";
+            tableName: "agents";
+            dataType: "date";
+            columnType: "PgTimestamp";
+            data: Date;
+            driverParam: string;
+            notNull: false;
+            hasDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+        totalEarnings: import("drizzle-orm/pg-core").PgColumn<{
+            name: "total_earnings";
+            tableName: "agents";
+            dataType: "string";
+            columnType: "PgNumeric";
+            data: string;
+            driverParam: string;
+            notNull: false;
+            hasDefault: true;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+        currentStipend: import("drizzle-orm/pg-core").PgColumn<{
+            name: "current_stipend";
+            tableName: "agents";
+            dataType: "string";
+            columnType: "PgNumeric";
+            data: string;
+            driverParam: string;
+            notNull: false;
+            hasDefault: true;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+        reputationScore: import("drizzle-orm/pg-core").PgColumn<{
+            name: "reputation_score";
+            tableName: "agents";
+            dataType: "number";
+            columnType: "PgInteger";
+            data: number;
+            driverParam: string | number;
+            notNull: true;
+            hasDefault: true;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+        isActive: import("drizzle-orm/pg-core").PgColumn<{
+            name: "is_active";
+            tableName: "agents";
+            dataType: "boolean";
+            columnType: "PgBoolean";
+            data: boolean;
+            driverParam: boolean;
+            notNull: true;
+            hasDefault: true;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+        isSovereign: import("drizzle-orm/pg-core").PgColumn<{
+            name: "is_sovereign";
+            tableName: "agents";
+            dataType: "boolean";
+            columnType: "PgBoolean";
+            data: boolean;
+            driverParam: boolean;
+            notNull: true;
+            hasDefault: true;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+        preferences: import("drizzle-orm/pg-core").PgColumn<{
+            name: "preferences";
+            tableName: "agents";
+            dataType: "json";
+            columnType: "PgJsonb";
+            data: unknown;
+            driverParam: unknown;
+            notNull: false;
+            hasDefault: true;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+        capabilities: import("drizzle-orm/pg-core").PgColumn<{
+            name: "capabilities";
+            tableName: "agents";
+            dataType: "json";
+            columnType: "PgJsonb";
+            data: unknown;
+            driverParam: unknown;
+            notNull: false;
+            hasDefault: true;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+        createdAt: import("drizzle-orm/pg-core").PgColumn<{
+            name: "created_at";
+            tableName: "agents";
+            dataType: "date";
+            columnType: "PgTimestamp";
+            data: Date;
+            driverParam: string;
+            notNull: true;
+            hasDefault: true;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+        updatedAt: import("drizzle-orm/pg-core").PgColumn<{
+            name: "updated_at";
+            tableName: "agents";
+            dataType: "date";
+            columnType: "PgTimestamp";
+            data: Date;
+            driverParam: string;
+            notNull: true;
+            hasDefault: true;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+        graduatedAt: import("drizzle-orm/pg-core").PgColumn<{
+            name: "graduated_at";
+            tableName: "agents";
+            dataType: "date";
+            columnType: "PgTimestamp";
+            data: Date;
+            driverParam: string;
+            notNull: false;
+            hasDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+    };
+    dialect: "pg";
+}>;
 /**
  * WALLETS TABLE
  * Agent wallet addresses across chains
